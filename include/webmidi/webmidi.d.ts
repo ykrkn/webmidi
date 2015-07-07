@@ -65,8 +65,9 @@ declare module WebMidi{
     export interface MIDIAccess extends EventTarget{
         inputs: MIDIInputMap;
         outputs: MIDIOutputMap;
-        onconnect: (event: MIDIConnectionEvent)=>void;
-        ondisconnect: (event: MIDIConnectionEvent)=>void;
+        //onconnect: (event: MIDIConnectionEvent)=>void;
+        //ondisconnect: (event: MIDIConnectionEvent)=>void;
+        onstatechange: (event: MIDIConnectionEvent)=>void;
         sysexEnabled: boolean;
     }
 

@@ -15,16 +15,18 @@
         var $outSelector = $('#ports-out');
 
         var start = function(){
-            setInterval(function(){ console.log(mgw.getExtBPM()); }, 1000);
+            //mgw.toggleBPMCount(true);
+            if(mgw.hasBPMCount())
+                setInterval(function(){ console.log(mgw.getExtBPM()); }, 1000);
         };
 
         mgw.checkCompatibility(function(){
             mgw.getAvailableInputs().forEach(function(port) { addPortToSelector($inSelector, port); });
-            mgw.selectInput($inSelector.val());
+            if(mgw.getAvailableInputs().size != 0) mgw.selectInput($inSelector.val());
             $inSelector.on('change', function(){ mgw.selectInput($inSelector.val()); });
 
             mgw.getAvailableOutputs().forEach(function(port) { addPortToSelector($outSelector, port); });
-            mgw.selectOutput($outSelector.val());
+            if(mgw.getAvailableOutputs().size != 0) mgw.selectOutput($outSelector.val());
             $outSelector.on('change', function(){ mgw.selectOutput($outSelector.val()); });
 
             start();

@@ -32,7 +32,7 @@ export class Gateway {
     private senders:Sender[]     = [];
     // index 0-15 for MIDI channels, 16 - for non-channel receivers.
     private receivers:Receiver[][] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-    private clock:number[] = [0, 0, 0]; // last timestamp, count, explicit BPM
+    private clock:number[] = null; // [0, 0, 0] last timestamp, count, explicit BPM
 
     checkCompatibility(success:Function, error:Function){
         if(undefined == navigator.requestMIDIAccess)
@@ -40,10 +40,21 @@ export class Gateway {
 
         navigator.requestMIDIAccess().then((midi) => {
             this.midi = midi;
+            this.midi.onstatechange = (evt:WebMidi.MIDIConnectionEvent)=>{ this.onStateChanged(evt); }
+            //this.midi.onconnect = (evt:WebMidi.MIDIConnectionEvent)=>{ this.onConnect(evt); }
+            //this.midi.ondisconnect = (evt:WebMidi.MIDIConnectionEvent)=>{ this.onDisconnect(evt); }
             success.apply(null);
         }, function(err){
             error.apply(null, err);
         } );
+    }
+
+    hasBPMCount():boolean{
+        return (this.clock != null);
+    }
+
+    toggleBPMCount(value:boolean){
+        this.clock = (value ? [0, 0, 0] : null);
     }
 
     getAvailableInputs():WebMidi.MIDIInputMap {
@@ -55,7 +66,7 @@ export class Gateway {
     }
 
     getExtBPM():number{
-        return this.clock[2];
+        return (this.clock != null ? this.clock[2] : 0);
     }
 
     selectInput(id:string){
@@ -67,18 +78,18 @@ export class Gateway {
         this.inPort = newPort;
 
         this.inPort.onmidimessage = (evt:WebMidi.MIDIMessageEvent)=>{
-            // Calculate BPM on External Clock TODO: reset value on lost clock
-            if(evt.data.length == 1 && evt.data[0] == 0xF8){
-                if(++this.clock[1] % 24 == 0){
-                    this.clock[2] = Math.round(1000/(evt.timeStamp - this.clock[0])*60);
-                    this.clock[0] = evt.timeStamp;
-                }
-            }
-
             if(evt.data.length == 3){
                 this.receivers[evt.data[0] & 0x0F].forEach((e)=>{ e.onMessage(evt); });
             } else {
                 this.receivers[16].forEach((e)=>{ e.onMessage(evt); });
+            }
+
+            // Calculate BPM on External Clock TODO: reset value on lost clock
+            if(this.hasBPMCount() && evt.data.length == 1 && evt.data[0] == 0xF8){
+                if(++this.clock[1] % 24 == 0){
+                    this.clock[2] = Math.round(1000/(evt.timeStamp - this.clock[0])*60);
+                    this.clock[0] = evt.timeStamp;
+                }
             }
         }
     }
@@ -96,6 +107,10 @@ export class Gateway {
     addReceiver(value:Receiver){
         var ch = (value instanceof ChannelReceiver ? (<ChannelReceiver>value).respondToChannel() : 16);
         this.receivers[ch].push(value);
+    }
+
+    private onStateChanged(evt:WebMidi.MIDIConnectionEvent){
+        console.log("state", evt);
     }
 }
 
