@@ -2,14 +2,6 @@
 
 // http://www.midi.org/techspecs/midimessages.php
 
-export interface IInput {
-    setInPort(port:WebMidi.MIDIInput);
-}
-
-export interface IOutput {
-    setOutPort(port:WebMidi.MIDIOutput);
-}
-
 export class Consts {
     public static NOTE_ON_MSG:number        = 0x90; // 1001nnnn
     public static NOTE_OFF_MSG:number       = 0x80; // 1000nnnn
@@ -17,16 +9,41 @@ export class Consts {
     public static PITCH_MSG:number          = 0xE0; // 1110nnnn
 }
 
-export class Gateway implements IInput, IOutput {
-
+export class Gateway {
+    private midi:WebMidi.MIDIAccess;
     private inPort:WebMidi.MIDIInput;
     private outPort:WebMidi.MIDIOutput;
     private senders:Sender[]     = [];
     // index 0-15 for MIDI channels, 16 - for non-channel receivers.
     private receivers:Receiver[][] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
 
-    setInPort(port:WebMidi.MIDIInput){
-        this.inPort = port;
+    checkCompatibility(success:Function, error:Function){
+        if(undefined == navigator.requestMIDIAccess)
+            error.apply(null, "Browser not supports WebMIDI");
+
+        navigator.requestMIDIAccess().then((midi) => {
+            this.midi = midi;
+            success.apply(null);
+        }, function(err){
+            error.apply(null, err);
+        } );
+    }
+
+    getAvailableInputs():WebMidi.MIDIInputMap {
+        return this.midi.inputs;
+    }
+
+    getAvailableOutputs():WebMidi.MIDIOutputMap {
+        return this.midi.outputs;
+    }
+
+    selectInput(id:string){
+        var newPort:WebMidi.MIDIInput = this.midi.inputs.get(id);
+
+        if(this.inPort != null)
+            this.inPort.onmidimessage = null;
+
+        this.inPort = newPort;
         this.inPort.onmidimessage = (evt:WebMidi.MIDIMessageEvent)=>{
             if(evt.data.length == 3){
                 this.receivers[evt.data[0] & 0x0F].forEach((e)=>{ e.onMessage(evt); });
@@ -34,9 +51,9 @@ export class Gateway implements IInput, IOutput {
         }
     }
 
-    setOutPort(port:WebMidi.MIDIOutput) {
-        this.outPort = port;
-        this.senders.forEach((e)=>{e.setOutPort(port)});
+    selectOutput(id:string){
+        this.outPort = this.midi.outputs.get(id);
+        this.senders.forEach((e)=>{e.setOutPort(this.outPort)});
     }
 
     addSender(value:Sender){
@@ -50,7 +67,7 @@ export class Gateway implements IInput, IOutput {
     }
 }
 
-export class Sender implements IOutput{
+export class Sender {
 
     /* protected */
     public port:WebMidi.MIDIOutput;

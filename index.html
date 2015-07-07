@@ -1,7 +1,7 @@
 <html>
 <head>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="midi.js"></script>
+    <script src="http://requirejs.org/docs/release/2.1.18/minified/require.js"></script>
 </head>
 <body>
 <select id="ports-in"></select>
@@ -9,78 +9,51 @@
 </body>
 <script>
 
-    function MidiHelper(in_selector, input_changed_cb, out_selector, output_changed_cb){
-        var self = this;
-        self.inSelector = new PortSelector(in_selector, input_changed_cb);
-        self.outSelector = new PortSelector(out_selector, output_changed_cb);
+    requirejs(['midi'], function (midi) {
+        var mgw = new midi.Gateway();
+        var $inSelector = $('#ports-in');
+        var $outSelector = $('#ports-out');
 
-        self.midi = null;
+        mgw.checkCompatibility(function(){
+            mgw.getAvailableInputs().forEach(function(port) { addPortToSelector($inSelector, port); });
+            mgw.selectInput($inSelector.val());
+            $inSelector.on('change', function(){ mgw.selectInput($inSelector.val()); });
 
-        navigator.requestMIDIAccess().then(function(midi){
-            self.midi = midi;
-            self.inSelector.setPorts(midi.inputs);
-            self.outSelector.setPorts(midi.outputs);
-        }, function(e){
-            debugger;
-        } );
-    }
+            mgw.getAvailableOutputs().forEach(function(port) { addPortToSelector($outSelector, port); });
+            mgw.selectOutput($outSelector.val());
+            $outSelector.on('change', function(){ mgw.selectOutput($outSelector.val()); });
+        }, function(err){
+            alert(error);
+        });
 
-    function PortSelector(e, changed_cb)
-    {
-        var self = this;
-        var $e = $(e);
-        var selectedPort = null;
-        self.midiPorts = null;
-
-        $e.on('change', function(){ self.selectPort($e.val()); });
-
-        self.setPorts = function(midiPorts){
-            self.midiPorts = midiPorts;
-            var firstPortSelected = false;
-            midiPorts.forEach(function(port) {
-                self.addPortToSelector(port);
-                if(!firstPortSelected){ self.selectPort(port.id); firstPortSelected = true; }
-            });
-        }
-
-        self.addPortToSelector = function(port){
+        var addPortToSelector = function($e, port){
             var opt = document.createElement("option");
             opt.text = port.manufacturer + ' ' + port.name + ' ' + port.type;
             opt.value = port.id;
             $e.append(opt);
         };
 
-        self.selectPort = function (id) {
-            var newPort = self.midiPorts.get(id);
-            if (!newPort) { throw new Error("Invalid port id"); }
-            // save ID for remembering the port localStorage.setItem('port-id', id);
-            // remove listeners!
-            selectedPort = newPort;
-            changed_cb.call(null, newPort);
-        };
-    }
+        debugger;
+    });
 
-    var ts = 0;
-    var cnt = 0;
-
-    var incb = function(port){
-        port.onmidimessage = function(e){ //addEventListener('onmidimessage', function(e){
-            //console.log(e.timeStamp, e.data);
-            if(e.data.length == 1 && e.data[0] == 0xF8){
-                if(++cnt % 24 == 0){
-                    console.log( Math.round(1000/(e.timeStamp - ts)*60) );
-                    ts = e.timeStamp;
-                }
-            }
-        };//)
-    };
-
-    var outcb = function(port){
-        //port.send([0xFA]);
-        //setInterval(function(){ port.send([0xF8]); }, 40);
-    };
-
-    var midi = new MidiHelper('#ports-in', incb, '#ports-out', outcb);
+//    var ts = 0;
+//    var cnt = 0;
+//
+//    var incb = function(port){
+//        port.onmidimessage = function(e){
+//            if(e.data.length == 1 && e.data[0] == 0xF8){
+//                if(++cnt % 24 == 0){
+//                    console.log( Math.round(1000/(e.timeStamp - ts)*60) );
+//                    ts = e.timeStamp;
+//                }
+//            }
+//        };//)
+//    };
+//
+//    var outcb = function(port){
+//        //port.send([0xFA]);
+//        //setInterval(function(){ port.send([0xF8]); }, 40);
+//    };
 
 
 </script>
