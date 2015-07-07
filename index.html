@@ -14,6 +14,10 @@
         var $inSelector = $('#ports-in');
         var $outSelector = $('#ports-out');
 
+        var start = function(){
+            setInterval(function(){ console.log(mgw.getExtBPM()); }, 1000);
+        };
+
         mgw.checkCompatibility(function(){
             mgw.getAvailableInputs().forEach(function(port) { addPortToSelector($inSelector, port); });
             mgw.selectInput($inSelector.val());
@@ -22,6 +26,8 @@
             mgw.getAvailableOutputs().forEach(function(port) { addPortToSelector($outSelector, port); });
             mgw.selectOutput($outSelector.val());
             $outSelector.on('change', function(){ mgw.selectOutput($outSelector.val()); });
+
+            start();
         }, function(err){
             alert(error);
         });
@@ -32,29 +38,7 @@
             opt.value = port.id;
             $e.append(opt);
         };
-
-        debugger;
     });
-
-//    var ts = 0;
-//    var cnt = 0;
-//
-//    var incb = function(port){
-//        port.onmidimessage = function(e){
-//            if(e.data.length == 1 && e.data[0] == 0xF8){
-//                if(++cnt % 24 == 0){
-//                    console.log( Math.round(1000/(e.timeStamp - ts)*60) );
-//                    ts = e.timeStamp;
-//                }
-//            }
-//        };//)
-//    };
-//
-//    var outcb = function(port){
-//        //port.send([0xFA]);
-//        //setInterval(function(){ port.send([0xF8]); }, 40);
-//    };
-
 
 </script>
 </html>

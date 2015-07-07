@@ -2,6 +2,22 @@
 
 // http://www.midi.org/techspecs/midimessages.php
 
+/**
+ *
+ *  Create your own receiver
+ *
+ *  var ConsoleLogReceiver = (function (_super) {
+ *      __extends(ConsoleLogReceiver, _super);
+ *      function ConsoleLogReceiver() { _super.apply(this, arguments); }
+ *
+ *      ConsoleLogReceiver.prototype.onMessage = function (e) {
+ *          console.log(e);
+ *      };
+ *
+ *      return ConsoleLogReceiver;
+ *  })(midi.Receiver);
+ *
+ */
 export class Consts {
     public static NOTE_ON_MSG:number        = 0x90; // 1001nnnn
     public static NOTE_OFF_MSG:number       = 0x80; // 1000nnnn
@@ -16,6 +32,7 @@ export class Gateway {
     private senders:Sender[]     = [];
     // index 0-15 for MIDI channels, 16 - for non-channel receivers.
     private receivers:Receiver[][] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
+    private clock:number[] = [0, 0, 0]; // last timestamp, count, explicit BPM
 
     checkCompatibility(success:Function, error:Function){
         if(undefined == navigator.requestMIDIAccess)
@@ -37,6 +54,10 @@ export class Gateway {
         return this.midi.outputs;
     }
 
+    getExtBPM():number{
+        return this.clock[2];
+    }
+
     selectInput(id:string){
         var newPort:WebMidi.MIDIInput = this.midi.inputs.get(id);
 
@@ -44,9 +65,20 @@ export class Gateway {
             this.inPort.onmidimessage = null;
 
         this.inPort = newPort;
+
         this.inPort.onmidimessage = (evt:WebMidi.MIDIMessageEvent)=>{
+            // Calculate BPM on External Clock TODO: reset value on lost clock
+            if(evt.data.length == 1 && evt.data[0] == 0xF8){
+                if(++this.clock[1] % 24 == 0){
+                    this.clock[2] = Math.round(1000/(evt.timeStamp - this.clock[0])*60);
+                    this.clock[0] = evt.timeStamp;
+                }
+            }
+
             if(evt.data.length == 3){
                 this.receivers[evt.data[0] & 0x0F].forEach((e)=>{ e.onMessage(evt); });
+            } else {
+                this.receivers[16].forEach((e)=>{ e.onMessage(evt); });
             }
         }
     }
