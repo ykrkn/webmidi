@@ -133,7 +133,8 @@ export class ChannelSender extends Sender {
 
     private channel:number;
 
-    setChannel(channel:number) {
+    constructor(channel:number) {
+        super();
         this.channel = channel;
     }
 

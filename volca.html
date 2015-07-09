@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="css/main.css" rel="stylesheet"/>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <!--<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
+    <script src="http://requirejs.org/docs/release/2.1.18/minified/require.js"></script>
+    <script src="js/knob.js"></script>
+</head>
+<body>
+    <div class="settings">
+        <select id="ports-in"></select>
+        <select id="ports-out"></select>
+    </div>
+
+    <div class="instr-iface volca-keys">
+        <input class="knob cc040 large" type="range" min="0" max="127" data-degree-range="160" data-degree-offset="90" step="1" value="64" />
+        <input class="knob cc041 large" type="range" min="0" max="127" data-degree-range="160" data-degree-offset="90" step="1" value="64" />
+        <input class="knob cc042 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc005 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc043 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc044 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc011 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc045 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc046 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc047 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc048 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc049 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc050 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc051 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc052 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+        <input class="knob cc053 small" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+    </div>
+
+<script>
+
+requirejs(['midi'], function (midi) {
+    var mgw = new midi.Gateway();
+    var $inSelector = $('#ports-in');
+    var $outSelector = $('#ports-out');
+
+    var start = function(){
+        var sender = new midi.ChannelSender(1);
+        $('.knob').on('change', function(e){
+        //    debugger;
+        });
+    };
+
+    mgw.checkCompatibility(function(){
+        mgw.getAvailableInputs().forEach(function(port) { addPortToSelector($inSelector, port); });
+        if(mgw.getAvailableInputs().size != 0) mgw.selectInput($inSelector.val());
+        $inSelector.on('change', function(){ mgw.selectInput($inSelector.val()); });
+
+        mgw.getAvailableOutputs().forEach(function(port) { addPortToSelector($outSelector, port); });
+        if(mgw.getAvailableOutputs().size != 0) mgw.selectOutput($outSelector.val());
+        $outSelector.on('change', function(){ mgw.selectOutput($outSelector.val()); });
+
+        start();
+    }, function(err){
+        alert(error);
+    });
+
+    var addPortToSelector = function($e, port){
+        var opt = document.createElement("option");
+        opt.text = port.manufacturer + ' ' + port.name + ' ' + port.type;
+        opt.value = port.id;
+        $e.append(opt);
+    };
+});
+
+rangeKnob(document.querySelectorAll('.knob'), "#ff3300");
+
+//$( ".knob" ).draggable({ stop: function( event, ui ) { console.log(ui.position.left, ui.position.top); } });
+
+</script>
+
+</body>
+</html>
