@@ -51,12 +51,31 @@ requirejs(['js/midi'], function (midi) {
     var model = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
     var start = function(){
-        mgw.getAvailableOutputs().forEach(function(port) { addPortToSelector($outSelector, port); });
-        if(mgw.getAvailableOutputs().size != 0) mgw.selectOutput($outSelector.val());
-        $outSelector.on('change', function(){ mgw.selectOutput($outSelector.val()); });
-        for(var i=0; i<16; ++i) $chnSelector.append('<option value="'+i+'">'+(i+1)+'</option>');
+        mgw.getAvailableOutputs().forEach(function(port) {
+            addPortToSelector($outSelector, port);
+        });
+
+        if(mgw.getAvailableOutputs().size != 0) {
+            mgw.selectOutput($outSelector.val());
+        }
+
+        $outSelector.on('change', function(){
+            var val = $outSelector.val();
+            mgw.selectOutput();
+            model['out'] = val;
+        });
+
+        for(var i=0; i<16; ++i) {
+            $chnSelector.append('<option value="'+i+'">'+(i+1)+'</option>');
+        }
+
         sender.setChannel($chnSelector.val());
-        $chnSelector.on('change', function(){sender.setChannel($chnSelector.val()); });
+
+        $chnSelector.on('change', function(){
+            var val = $chnSelector.val();
+            sender.setChannel(val);
+            model['port'] = val;
+        });
 
         $('.instrument .iface').show();
 
