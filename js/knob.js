@@ -24,12 +24,6 @@ function rangeKnob(elm, progColor, className) {
         ctx.stroke();
     }
 
-    function simulateEvent(ev, elm) {
-        var event = new Event('input', { 'view': window });
-        var cb = elm;
-        cb.dispatchEvent(event);
-    }
-
     function toRad(deg){
         var rad = deg / (180 / Math.PI);
         return rad;
@@ -106,47 +100,45 @@ function rangeKnob(elm, progColor, className) {
         });
 
         document.addEventListener("mousemove", function(e){
-            if(focused){
-                if(!mouse.lastPos){ mouse.lastPos = mouse.clickPos; }
-                var originalNode = focused.childNodes[3];
-                var min = originalNode.getAttribute("data-degree-offset");
-                var degRange = originalNode.getAttribute("data-degree-range");
-                var max = parseInt(min) + parseInt(degRange);
+            if(focused == null){ return; }
+            if(!mouse.lastPos){ mouse.lastPos = mouse.clickPos; }
+            var originalNode = focused.childNodes[3];
+            var min = originalNode.getAttribute("data-degree-offset");
+            var degRange = originalNode.getAttribute("data-degree-range");
+            var max = parseInt(min) + parseInt(degRange);
 
-                newPos = e.pageY;
-                var diff = (mouse.lastPos - newPos) * speed;
-                var rot = focused.firstChild.style.transform || 0;
-                if(rot !== 0){
-                    rot = parseInt(rot.replace("rotate(", "").replace("deg)", ""));
-                }
+            newPos = e.pageY;
+            var diff = (mouse.lastPos - newPos) * speed;
+            var rot = focused.firstChild.style.transform || 0;
+            if(rot !== 0){
+                rot = parseInt(rot.replace("rotate(", "").replace("deg)", ""));
+            }
 
-                var newRot = rot + diff * speed;
-                if(newRot < min){ newRot = min; }
-                if(newRot > max){ newRot = max; }
-                var newVal = Math.round((newRot-min) / focused.getAttribute("data-rosetta") + parseInt(focused.getAttribute("min")));
-                var step = originalNode.getAttribute("step");
-                var stepped = (~~(newVal/step) * step);
-                //console.log(newRot, min, focused.getAttribute("data-rosetta"), focused.getAttribute("min"), newVal, stepped);
-                var lastVal = originalNode.value;
-                originalNode.value = stepped;
+            var newRot = rot + diff * speed;
+            if(newRot < min){ newRot = min; }
+            if(newRot > max){ newRot = max; }
+            var newVal = Math.round((newRot-min) / focused.getAttribute("data-rosetta") + parseInt(focused.getAttribute("min")));
+            var step = originalNode.getAttribute("step");
+            var stepped = (~~(newVal/step) * step);
+            //console.log(newRot, min, focused.getAttribute("data-rosetta"), focused.getAttribute("min"), newVal, stepped);
+            var lastVal = parseInt(originalNode.value);
+            originalNode.value = stepped;
 
-                var rad = parseInt(getCSS(focused.firstChild, "width"))/2;
+            var rad = parseInt(getCSS(focused.firstChild, "width"))/2;
 
-                if(stepped == minVal){
-                    clearCanvas(focused.firstChild.nextSibling);
-                } else {
-                    drawArc(focused.firstChild.nextSibling, rad * 2, newRot, min, progWidth, progColor);
-                }
+            if(stepped == minVal){
+                clearCanvas(focused.firstChild.nextSibling);
+            } else {
+                drawArc(focused.firstChild.nextSibling, rad * 2, newRot, min, progWidth, progColor);
+            }
 
-                rotate(focused.firstChild, newRot);
-                focused.childNodes[2].innerHTML = stepped;
-                mouse.lastPos = newPos;
+            rotate(focused.firstChild, newRot);
+            focused.childNodes[2].innerHTML = stepped;
+            mouse.lastPos = newPos;
 
-                if(lastVal !== stepped){ //only trigger event if value is new
-                    //originalNode.value = stepped;
-                    //debugger;
-                     simulateEvent('input', originalNode);
-                }
+            if(lastVal !== stepped){ //only trigger event if value is new
+                originalNode.setAttribute('value', stepped);
+                originalNode.dispatchEvent(new Event('change'));
             }
         });
 

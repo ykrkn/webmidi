@@ -117,10 +117,15 @@ export class Gateway {
 export class Sender {
 
     /* protected */
-    public port:WebMidi.MIDIOutput;
+    public port:WebMidi.MIDIOutput = null;
 
     setOutPort(port:WebMidi.MIDIOutput) {
         this.port = port;
+    }
+
+    send(bytes:number[]){
+        if(this.port == null) return;
+        this.port.send(bytes);
     }
 }
 
@@ -131,29 +136,33 @@ export class Receiver {
 
 export class ChannelSender extends Sender {
 
-    private channel:number;
+    private channel:number = null;
 
-    constructor(channel:number) {
-        super();
+    setChannel(channel:number) {
         this.channel = channel;
     }
 
     noteOn(note:number, velocity:number){
-        this.port.send([Consts.NOTE_ON_MSG & this.channel, note, velocity]);
+        this.send([Consts.NOTE_ON_MSG, note, velocity]);
     }
 
     noteOff(note:number, velocity:number){
-        this.port.send([Consts.NOTE_OFF_MSG & this.channel, note, velocity]);
+        this.send([Consts.NOTE_OFF_MSG, note, velocity]);
     }
 
     cc(controller:number, value:number){
-        this.port.send([Consts.CC_MSG & this.channel, controller, value]);
+        this.send([Consts.CC_MSG, controller, value]);
     }
 
     pitch(value:number){
-        this.port.send([Consts.PITCH_MSG & this.channel, 0x2000]);
+        this.send([Consts.PITCH_MSG, 0x2000]);
     }
 
+    send(bytes:number[]){
+        if(this.channel == null) return;
+        bytes[0] |= this.channel;
+        super.send(bytes);
+    }
 }
 
 export class ChannelReceiver extends Receiver {
