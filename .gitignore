@@ -1,4 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
-*.map
+**/*.map
+include/**/*.js
 midi.js
+.DS_Store

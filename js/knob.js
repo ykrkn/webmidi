@@ -49,8 +49,8 @@ function rangeKnob(elm, progColor, className) {
         step = node.getAttribute("step");
         maxVal = node.max;
         minVal = node.min;
-        min = node.getAttribute("data-degree-offset");;
-        degRange = node.getAttribute("data-degree-range");;
+        min = node.getAttribute("data-degree-offset");
+        degRange = node.getAttribute("data-degree-range");
         max = parseInt(min) + parseInt(degRange);
         valRange = maxVal- minVal;
         rosetta = degRange / valRange;
@@ -145,7 +145,7 @@ function rangeKnob(elm, progColor, className) {
                 if(lastVal !== stepped){ //only trigger event if value is new
                     //originalNode.value = stepped;
                     //debugger;
-                    simulateEvent('input', originalNode);
+                     simulateEvent('input', originalNode);
                 }
             }
         });

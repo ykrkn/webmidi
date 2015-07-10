@@ -1,0 +1,176 @@
+body {
+  background: #e0e0e0;
+}
+.instrument {
+  position: absolute;
+}
+.instrument .settings {
+  position: absolute;
+}
+.instrument .iface {
+  position: absolute;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  min-height: 100%;
+  height: 100%;
+}
+.instrument .iface .knob {
+  position: absolute;
+}
+.instrument .iface .knob .hidden {
+  display: none;
+}
+.instrument .iface.volca-keys {
+  width: 1000px;
+  height: 596px;
+  background: url('../img/vkeys.jpg') no-repeat;
+}
+.instrument .iface.volca-keys .cc040 {
+  left: 73px;
+  top: 121px;
+}
+.instrument .iface.volca-keys .cc041 {
+  left: 73px;
+  top: 243px;
+}
+.instrument .iface.volca-keys .cc042 {
+  left: 205px;
+  top: 103px;
+}
+.instrument .iface.volca-keys .cc005 {
+  left: 204px;
+  top: 173px;
+}
+.instrument .iface.volca-keys .cc043 {
+  left: 204px;
+  top: 243px;
+}
+.instrument .iface.volca-keys .cc044 {
+  left: 303px;
+  top: 103px;
+}
+.instrument .iface.volca-keys .cc011 {
+  left: 302px;
+  top: 173px;
+}
+.instrument .iface.volca-keys .cc045 {
+  left: 302px;
+  top: 242px;
+}
+.instrument .iface.volca-keys .cc046 {
+  left: 401px;
+  top: 104px;
+}
+.instrument .iface.volca-keys .cc047 {
+  left: 401px;
+  top: 174px;
+}
+.instrument .iface.volca-keys .cc048 {
+  left: 402px;
+  top: 244px;
+}
+.instrument .iface.volca-keys .cc049 {
+  left: 499px;
+  top: 104px;
+}
+.instrument .iface.volca-keys .cc050 {
+  left: 499px;
+  top: 173px;
+}
+.instrument .iface.volca-keys .cc051 {
+  left: 498px;
+  top: 244px;
+}
+.instrument .iface.volca-keys .cc052 {
+  left: 629px;
+  top: 165px;
+}
+.instrument .iface.volca-keys .cc053 {
+  left: 720px;
+  top: 166px;
+}
+/* Knob   http://codepen.io/prythm/pen/RNBzeK */
+div.knob.small {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  margin: 0;
+}
+div.knob.small label {
+  display: block;
+  text-align: center;
+  font-size: 1em;
+}
+div.knob.small canvas.knob-progress {
+  position: relative;
+  top: 1;
+  left: 1;
+  z-index: 1;
+}
+div.knob.small div.knob-face {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  border-radius: 2em;
+  border: 0.2em solid #ffffff;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: absolute;
+  z-index: 2;
+}
+div.knob.small div.knob-face div.knob-hand {
+  width: 0.2em;
+  background-color: transparent;
+  box-sizing: border-box;
+  border-bottom: 0.8em solid #ffffff;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  margin-left: -0.1em;
+}
+div.knob.large {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  margin: 0;
+}
+div.knob.large label {
+  display: block;
+  text-align: center;
+  font-size: 1em;
+}
+div.knob.large canvas.knob-progress {
+  position: relative;
+  top: 1;
+  left: 1;
+  z-index: 1;
+}
+div.knob.large div.knob-face {
+  display: inline-block;
+  width: 4em;
+  height: 4em;
+  border-radius: 4em;
+  border: 0.2em solid #ffffff;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: absolute;
+  z-index: 2;
+}
+div.knob.large div.knob-face div.knob-hand {
+  width: 0.2em;
+  background-color: transparent;
+  box-sizing: border-box;
+  border-bottom: 1.4em solid #ffffff;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  margin-left: -0.1em;
+}

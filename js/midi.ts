@@ -1,4 +1,4 @@
-/// <reference path="./include/webmidi/webmidi.d.ts" />
+/// <reference path="./../include/webmidi/webmidi.d.ts" />
 
 // http://www.midi.org/techspecs/midimessages.php
 

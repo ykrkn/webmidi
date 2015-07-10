@@ -3,42 +3,48 @@ body{
   background: #e0e0e0;
 }
 
-.instr-iface{
-   position: absolute;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  min-height: 100%; height: 100%;
-  .knob{
-    position:absolute;
-    .hidden {display: none;}
+.instrument{
+  position: absolute;
+  .settings{
+    position: absolute;
   }
-  &.volca-keys{
-    width:1000px;
-    height:596px;
-    background: url('../img/vkeys.jpg') no-repeat;
-    .cc040{ left:73px;  top:121px}
-    .cc041{ left:73px;  top:243px}
-    .cc042{ left:205px; top:103px}
-    .cc005{ left:204px; top:173px}
-    .cc043{ left:204px; top:243px}
-    .cc044{ left:303px; top:103px}
-    .cc011{ left:302px; top:173px}
-    .cc045{ left:302px; top:242px}
-    .cc046{ left:401px; top:104px}
-    .cc047{ left:401px; top:174px}
-    .cc048{ left:402px; top:244px}
-    .cc049{ left:499px; top:104px}
-    .cc050{ left:499px; top:173px}
-    .cc051{ left:498px; top:244px}
-    .cc052{ left:629px; top:165px}
-    .cc053{ left:720px; top:166px}
+  .iface{
+    position: absolute;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    min-height: 100%; height: 100%;
+    .knob{
+      position:absolute;
+      .hidden {display: none;}
+    }
+    &.volca-keys{
+      width:1000px;
+      height:596px;
+      background: url('../img/vkeys.jpg') no-repeat;
+      .cc040{ left:73px;  top:121px}
+      .cc041{ left:73px;  top:243px}
+      .cc042{ left:205px; top:103px}
+      .cc005{ left:204px; top:173px}
+      .cc043{ left:204px; top:243px}
+      .cc044{ left:303px; top:103px}
+      .cc011{ left:302px; top:173px}
+      .cc045{ left:302px; top:242px}
+      .cc046{ left:401px; top:104px}
+      .cc047{ left:401px; top:174px}
+      .cc048{ left:402px; top:244px}
+      .cc049{ left:499px; top:104px}
+      .cc050{ left:499px; top:173px}
+      .cc051{ left:498px; top:244px}
+      .cc052{ left:629px; top:165px}
+      .cc053{ left:720px; top:166px}
+    }
   }
-
 }
+
 
 /* Knob   http://codepen.io/prythm/pen/RNBzeK */
 
