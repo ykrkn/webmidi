@@ -1,49 +1,59 @@
 
 body{
   background: #f0f0f0;
+  font-family: Arial, Verdana;
+}
+
+.noselect{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .instrument{
+  .noselect();
   position: absolute;
+  font-size: 16px;
   .settings{
     box-sizing: border-box;
     background: #e0e0e0;
-    width:1000px;
+    width:800px;
     padding: 8px;
+    label, select {
+      display: inline-block;
+      font-size: 10pt;
+    }
   }
   .iface{
     position: absolute;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     min-height: 100%; height: 100%;
     .knob{
       position:absolute;
       .hidden {display: none;}
     }
     &.volca-keys{
-      width:1000px;
-      height:596px;
+      width:800px;
+      height:478px;
       background: url('../img/vkeys.jpg') no-repeat;
-      .cc040{ left:73px;  top:121px}
-      .cc041{ left:73px;  top:243px}
-      .cc042{ left:205px; top:103px}
-      .cc005{ left:204px; top:173px}
-      .cc043{ left:204px; top:243px}
-      .cc044{ left:303px; top:103px}
-      .cc011{ left:302px; top:173px}
-      .cc045{ left:302px; top:242px}
-      .cc046{ left:401px; top:104px}
-      .cc047{ left:401px; top:174px}
-      .cc048{ left:402px; top:244px}
-      .cc049{ left:499px; top:104px}
-      .cc050{ left:499px; top:173px}
-      .cc051{ left:498px; top:244px}
-      .cc052{ left:629px; top:165px}
-      .cc053{ left:720px; top:166px}
+      .cc040 { left:52px;  top:91px; }
+      .cc041 { left:52px;  top:187px;}
+      .cc042 { left:159px; top:79px; }
+      .cc005 { left:158px; top:135px;}
+      .cc043 { left:158px; top:191px;}
+      .cc044 { left:238px; top:79px; }
+      .cc011 { left:236px; top:135px;}
+      .cc045 { left:237px; top:191px;}
+      .cc046 { left:316px; top:79px; }
+      .cc047 { left:316px; top:135px;}
+      .cc048 { left:317px; top:192px;}
+      .cc049 { left:395px; top:79px; }
+      .cc050 { left:395px; top:136px;}
+      .cc051 { left:395px; top:192px;}
+      .cc052 { left:499px; top:129px;}
+      .cc053 { left:572px; top:129px;}
     }
   }
 }
@@ -51,10 +61,20 @@ body{
 
 /* Knob   http://codepen.io/prythm/pen/RNBzeK */
 
-.knob-input(@size; @line-size; @hand-margin; @hand-size) {
+.knob-input(@size; @line-size; @hand-margin; @hand-size; @label-left; @label-top) {
   width: auto; height: auto; display: inline-block; cursor: pointer; position: absolute; margin: 0;
-  label { display: block; text-align: center; font-size: 1em;}
-  canvas.knob-progress {position: relative; top: 1; left: 1; z-index: 1;}
+  label {
+    position:absolute;
+    left: @label-left; top: @label-top;
+    display: block;
+    text-align: left;
+    font-size: 1em;
+    background: #FFFFFF;
+    padding: 2px;
+  }
+  canvas.knob-progress {
+    position: relative; top: 1; left: 1; z-index: 1;
+  }
   div.knob-face {
     display: inline-block;
     width: @size;
@@ -78,12 +98,7 @@ body{
   }
 }
 
-div.knob.small{
-  .knob-input(2em, 0.2em, -0.1em, 0.8em);
-}
-
-div.knob.large{
-  .knob-input(4em, 0.2em, -0.1em, 1.4em);
-}
+div.knob.small{  .knob-input(2em, 0.2em, -0.1em, 0.8em, 2.4em, .5em);  }
+div.knob.large{  .knob-input(4em, 0.2em, -0.1em, 1.4em, 4.5em, 3.3em);  }
 
 

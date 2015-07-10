@@ -1,23 +1,38 @@
 body {
   background: #f0f0f0;
+  font-family: Arial, Verdana;
 }
-.instrument {
-  position: absolute;
-}
-.instrument .settings {
-  box-sizing: border-box;
-  background: #e0e0e0;
-  width: 1000px;
-  padding: 8px;
-}
-.instrument .iface {
-  position: absolute;
+.noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.instrument {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: absolute;
+  font-size: 16px;
+}
+.instrument .settings {
+  box-sizing: border-box;
+  background: #e0e0e0;
+  width: 800px;
+  padding: 8px;
+}
+.instrument .settings label,
+.instrument .settings select {
+  display: inline-block;
+  font-size: 10pt;
+}
+.instrument .iface {
+  position: absolute;
   min-height: 100%;
   height: 100%;
 }
@@ -28,73 +43,73 @@ body {
   display: none;
 }
 .instrument .iface.volca-keys {
-  width: 1000px;
-  height: 596px;
+  width: 800px;
+  height: 478px;
   background: url('../img/vkeys.jpg') no-repeat;
 }
 .instrument .iface.volca-keys .cc040 {
-  left: 73px;
-  top: 121px;
+  left: 52px;
+  top: 91px;
 }
 .instrument .iface.volca-keys .cc041 {
-  left: 73px;
-  top: 243px;
+  left: 52px;
+  top: 187px;
 }
 .instrument .iface.volca-keys .cc042 {
-  left: 205px;
-  top: 103px;
+  left: 159px;
+  top: 79px;
 }
 .instrument .iface.volca-keys .cc005 {
-  left: 204px;
-  top: 173px;
+  left: 158px;
+  top: 135px;
 }
 .instrument .iface.volca-keys .cc043 {
-  left: 204px;
-  top: 243px;
+  left: 158px;
+  top: 191px;
 }
 .instrument .iface.volca-keys .cc044 {
-  left: 303px;
-  top: 103px;
+  left: 238px;
+  top: 79px;
 }
 .instrument .iface.volca-keys .cc011 {
-  left: 302px;
-  top: 173px;
+  left: 236px;
+  top: 135px;
 }
 .instrument .iface.volca-keys .cc045 {
-  left: 302px;
-  top: 242px;
+  left: 237px;
+  top: 191px;
 }
 .instrument .iface.volca-keys .cc046 {
-  left: 401px;
-  top: 104px;
+  left: 316px;
+  top: 79px;
 }
 .instrument .iface.volca-keys .cc047 {
-  left: 401px;
-  top: 174px;
+  left: 316px;
+  top: 135px;
 }
 .instrument .iface.volca-keys .cc048 {
-  left: 402px;
-  top: 244px;
+  left: 317px;
+  top: 192px;
 }
 .instrument .iface.volca-keys .cc049 {
-  left: 499px;
-  top: 104px;
+  left: 395px;
+  top: 79px;
 }
 .instrument .iface.volca-keys .cc050 {
-  left: 499px;
-  top: 173px;
+  left: 395px;
+  top: 136px;
 }
 .instrument .iface.volca-keys .cc051 {
-  left: 498px;
-  top: 244px;
+  left: 395px;
+  top: 192px;
 }
 .instrument .iface.volca-keys .cc052 {
-  left: 629px;
-  top: 165px;
+  left: 499px;
+  top: 129px;
 }
 .instrument .iface.volca-keys .cc053 {
-  left: 720px;
-  top: 166px;
+  left: 572px;
+  top: 129px;
 }
 /* Knob   http://codepen.io/prythm/pen/RNBzeK */
 div.knob.small {
@@ -106,9 +121,14 @@ div.knob.small {
   margin: 0;
 }
 div.knob.small label {
+  position: absolute;
+  left: 2.4em;
+  top: 0.5em;
   display: block;
-  text-align: center;
+  text-align: left;
   font-size: 1em;
+  background: #FFFFFF;
+  padding: 2px;
 }
 div.knob.small canvas.knob-progress {
   position: relative;
@@ -146,9 +166,14 @@ div.knob.large {
   margin: 0;
 }
 div.knob.large label {
+  position: absolute;
+  left: 4.5em;
+  top: 3.3em;
   display: block;
-  text-align: center;
+  text-align: left;
   font-size: 1em;
+  background: #FFFFFF;
+  padding: 2px;
 }
 div.knob.large canvas.knob-progress {
   position: relative;

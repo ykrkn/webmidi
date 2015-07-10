@@ -12,38 +12,43 @@
 <body>
     <div class="instrument">
         <div class="settings">
-            <select class="ports-out" style="display: inline-block"></select>
-            <select class="channels-out" style="display: inline-block"></select>
+            <label>MIDI port: </label>
+            <select class="ports-out"></select>
+            <label>Channel: </label>
+            <select class="channels-out"></select>
         </div>
         <div class="iface volca-keys" style="display: none">
-            <input class="knob cc040 large" data-cc="040" type="range" min="0" max="127" data-degree-range="160" data-degree-offset="90" step="1" value="64" />
-            <input class="knob cc041 large" data-cc="041" type="range" min="0" max="127" data-degree-range="160" data-degree-offset="90" step="1" value="64" />
-            <input class="knob cc042 small" data-cc="042" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc005 small" data-cc="005" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc043 small" data-cc="043" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc044 small" data-cc="044" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc011 small" data-cc="011" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc045 small" data-cc="045" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc046 small" data-cc="046" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc047 small" data-cc="047" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc048 small" data-cc="048" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc049 small" data-cc="049" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc050 small" data-cc="050" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc051 small" data-cc="051" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc052 small" data-cc="052" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
-            <input class="knob cc053 small" data-cc="053" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="64" />
+            <input class="knob cc040 large" data-cc="040" type="range" min="0" max="127" data-degree-range="160" data-degree-offset="90" step="1" value="0" />
+            <input class="knob cc041 large" data-cc="041" type="range" min="0" max="127" data-degree-range="160" data-degree-offset="90" step="1" value="0" />
+            <input class="knob cc042 small" data-cc="042" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc005 small" data-cc="005" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc043 small" data-cc="043" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc044 small" data-cc="044" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc011 small" data-cc="011" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc045 small" data-cc="045" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc046 small" data-cc="046" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc047 small" data-cc="047" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc048 small" data-cc="048" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc049 small" data-cc="049" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc050 small" data-cc="050" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc051 small" data-cc="051" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc052 small" data-cc="052" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
+            <input class="knob cc053 small" data-cc="053" type="range" min="0" max="127" data-degree-range="270" data-degree-offset="45" step="1" value="0" />
         </div>
     </div>
 
 <script>
 
 requirejs(['js/midi'], function (midi) {
+    var STORAGE_KEY = 'volca-keys';
     var mgw = new midi.Gateway();
     var sender = new midi.ChannelSender();
     mgw.addSender(sender);
 
     var $outSelector = $('.instrument .settings .ports-out');
     var $chnSelector = $('.instrument .settings .channels-out');
+
+    var model = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
     var start = function(){
         mgw.getAvailableOutputs().forEach(function(port) { addPortToSelector($outSelector, port); });
@@ -54,12 +59,21 @@ requirejs(['js/midi'], function (midi) {
         $chnSelector.on('change', function(){sender.setChannel($chnSelector.val()); });
 
         $('.instrument .iface').show();
-        rangeKnob(document.querySelectorAll('.knob'), "#ff3300");
 
-        $('.knob').change(function(e){
+        $('.knob').each(function(i, e){
+            var cc = parseInt($(e).data('cc'));
+            var val = model['cc'][cc];
+            if(val !== null && val !== undefined){ e.setAttribute('value', val); }
+            rangeKnob(e, "#ff3300");
+        }).change(function(e){
             var $e = $(e.target);
-            sender.cc(parseInt($e.data('cc')), parseInt($e.val()));
+            var cc = parseInt($e.data('cc'));
+            var val = parseInt($e.val());
+            sender.cc(cc, val);
+            model['cc'][cc] = val;
         });
+
+        // $(".knob").draggable({ stop: function(event, ui) { console.log('left:'+ui.position.left+'px; top:'+ui.position.top+'px;');}});
     };
 
     mgw.checkCompatibility(function(){
@@ -74,10 +88,11 @@ requirejs(['js/midi'], function (midi) {
         opt.value = port.id;
         $e.append(opt);
     };
+
+    setInterval(function(){localStorage.setItem(STORAGE_KEY, JSON.stringify(model))}, 3333);
 });
 
-//rangeKnob(document.querySelectorAll('.knob'), "#ff3300");
-//$( ".knob" ).draggable({ stop: function( event, ui ) { console.log('left:\''+ui.position.left+'\'px; top:\''+ui.position.top+'px\';'); } });
+
 
 </script>
 
