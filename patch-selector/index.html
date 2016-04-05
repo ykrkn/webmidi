@@ -6,15 +6,18 @@
 </head>
 <body>
     <style type="text/css">
-    body {font: 12pt 'Arial'; margin:0; background-color: #333344; color: #e0e0e0;}
+    body {font: 12pt 'Arial'; margin:0; background-color: #333344; color: #aaaaaa;}
     .container { clear: both; display: block; padding: 8pt;}
-    .btn { letter-spacing:1pt; float:left; border:1pt solid #aaaaaa; margin:2pt; padding:2pt;  -webkit-user-select: none; }
-    .btn.selected { background-color: #444455; }
+    .btn { cursor:pointer; letter-spacing:1pt; float:left; border:1pt solid #999999; color:#999999; margin:2pt; padding:2pt;  -webkit-user-select: none; }
+    .btn.selected { border-color: #ffffff; color: #ffffff; }
+    .btn.hidden { visibility: hidden; }
 
-    div[data-channel=0]{ background-color: yellow;}
-    div[data-channel=1]{ background-color: red;}
-    div[data-channel=2]{ background-color: green;}
-    div[data-channel=3]{ background-color: blue;}
+    /*
+    .chnl1{ background-color: rgba(120, 120, 201, 0.5);}
+    .chnl2{ color: red;}
+    .chnl3{ background-color: green;}
+    .chnl4{ background-color: blue;}
+    */
 
     </style>
     <div id="models" class="container"></div>
@@ -22,6 +25,11 @@
     <div id="patches" class="container"></div>
 </body>
 <script>
+
+    var $models = $('#models');
+    var $categories = $('#categories');
+    var $patches = $('#patches');
+
     Array.prototype.groupBy = function(colname){
         var result = [];
         this.forEach(function(_){ if(result.indexOf(_[colname]) == -1) result.push(_[colname])});
@@ -30,39 +38,78 @@
 
     Array.prototype.createButtons = function(){
         this.map(function(_){
-            return '<div class="btn patch" data-msb="'+_.midi_msb+'" data-lsb="'+_.midi_lsb+'" data-pgm="'+_.midi_pgm+'" data-channel="'+_.midi_channel+'">'+_.src_name+'</div>'
+            return '<div class="btn patch chnl'+(1+_.midi_channel)
+                    +'" data-msb="'+_.midi_msb
+                    +'" data-lsb="'+_.midi_lsb
+                    +'" data-pgm="'+_.midi_pgm
+                    +'" data-model="'+_.src_model
+                    +'" data-category="'+_.src_category
+                    +'" data-channel="'+_.midi_channel+'">'
+                    +_.src_name+'</div>'
         }).forEach(function(_){ $patches.append(_) });
     };
 
-    function applyFilter(){
-        $patches.html('');
-        var models = $models.find('.selected').map(function(i, _){return _.innerText}).toArray();
-        var categories = $categories.find('.selected').map(function(i, _){return _.innerText}).toArray();
-        patches
-            .filter(function(_){ return models.indexOf(_.src_model) != -1})
-            .filter(function(_){ return categories.indexOf(_.src_category) != -1})
-            .createButtons();
+    function visibilityForButton($t, state){
+        state ? $t.removeClass('hidden') : $t.addClass('hidden');
     }
 
-    var $models = $('#models');
-    var $categories = $('#categories');
-    var $patches = $('#patches');
+    function switchButton($t, state){
+        state ? $t.addClass('selected') : $t.removeClass('selected');
+    }
 
-    patches.groupBy('src_model').map(function(_){return '<div class="btn model">'+_+'</div>'}).forEach(function(_){ $models.append(_) });
-    patches.groupBy('src_category').map(function(_){return '<div class="btn category">'+_+'</div>'}).forEach(function(_){ $categories.append(_) });
+    function toggleButton($t){
+        var selected = $t.hasClass('selected');
+        selected ? $t.removeClass('selected') : $t.addClass('selected');
+        return !selected;
+    }
+
+    function onClickFilter(_){
+        var $t = $(_.originalEvent.target);
+        var selected = toggleButton($t);
+        if(_.originalEvent.target.innerText == 'ALL'){
+            $t.parent().find('.btn').each(function(i, _){ switchButton($(_), selected) });
+        }
+
+        var models = $models.find('.selected').map(function(i, _){return _.innerText}).toArray();
+        var categories = $categories.find('.selected').map(function(i, _){return _.innerText}).toArray();
+
+        $patches.html('');
+        patches
+            .filter(function(_){ return models.indexOf(_.src_model) != -1})
+            .filter(function(_){ return _.src_category == null ? true : categories.indexOf(_.src_category) != -1})
+            .createButtons();
+
+        /* TODO var visibleCategories = patches
+            .filter(function(_){ return models.indexOf(_.src_model) != -1})
+            .groupBy('src_category')
+            .filter(function(_){return _ != null});  
+
+        $categories.find('.btn').each(function(i, _){
+            if(visibleCategories.length == 0){
+                visibilityForButton($(_), false);    
+            }else{
+                visibilityForButton($(_), visibleCategories.indexOf(_.innerText) != -1);
+            }
+        });  */ 
+    }
+
+
+    $models.append('<div class="btn model">ALL</div>');
+    $categories.append('<div class="btn category">ALL</div>');
+    
+    patches.groupBy('src_model')
+        .map(function(_){return '<div class="btn model">'+_+'</div>'})
+        .forEach(function(_){ $models.append(_) });
+
+    patches.groupBy('src_category')
+        .filter(function(_){return _!=null})
+        .map(function(_){return '<div class="btn category">'+_+'</div>'})
+        .forEach(function(_){ $categories.append(_) });
+
     patches.createButtons();
 
-    $models.click(function(_){ 
-        var $t = $(_.originalEvent.target);
-        $t.hasClass('selected') ? $t.removeClass('selected') : $t.addClass('selected');
-        applyFilter();
-    });
-    
-    $categories.click(function(_){ 
-        var $t = $(_.originalEvent.target);
-        $t.hasClass('selected') ? $t.removeClass('selected') : $t.addClass('selected');
-        applyFilter();
-    });
+    $models.click(onClickFilter);
+    $categories.click(onClickFilter);
     
     $patches.click(function(_){ console.log(_.originalEvent.target)});
 
