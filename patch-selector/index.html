@@ -1,0 +1,71 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://requirejs.org/docs/release/2.1.18/minified/require.js"></script>
+    <script src="patches.js"></script>
+</head>
+<body>
+    <style type="text/css">
+    body {font: 12pt 'Arial'; margin:0; background-color: #333344; color: #e0e0e0;}
+    .container { clear: both; display: block; padding: 8pt;}
+    .btn { letter-spacing:1pt; float:left; border:1pt solid #aaaaaa; margin:2pt; padding:2pt;  -webkit-user-select: none; }
+    .btn.selected { background-color: #444455; }
+
+    div[data-channel=0]{ background-color: yellow;}
+    div[data-channel=1]{ background-color: red;}
+    div[data-channel=2]{ background-color: green;}
+    div[data-channel=3]{ background-color: blue;}
+
+    </style>
+    <div id="models" class="container"></div>
+    <div id="categories" class="container"></div>
+    <div id="patches" class="container"></div>
+</body>
+<script>
+    Array.prototype.groupBy = function(colname){
+        var result = [];
+        this.forEach(function(_){ if(result.indexOf(_[colname]) == -1) result.push(_[colname])});
+        return result;
+    };
+
+    Array.prototype.createButtons = function(){
+        this.map(function(_){
+            return '<div class="btn patch" data-msb="'+_.midi_msb+'" data-lsb="'+_.midi_lsb+'" data-pgm="'+_.midi_pgm+'" data-channel="'+_.midi_channel+'">'+_.src_name+'</div>'
+        }).forEach(function(_){ $patches.append(_) });
+    };
+
+    function applyFilter(){
+        $patches.html('');
+        var models = $models.find('.selected').map(function(i, _){return _.innerText}).toArray();
+        var categories = $categories.find('.selected').map(function(i, _){return _.innerText}).toArray();
+        patches
+            .filter(function(_){ return models.indexOf(_.src_model) != -1})
+            .filter(function(_){ return categories.indexOf(_.src_category) != -1})
+            .createButtons();
+    }
+
+    var $models = $('#models');
+    var $categories = $('#categories');
+    var $patches = $('#patches');
+
+    patches.groupBy('src_model').map(function(_){return '<div class="btn model">'+_+'</div>'}).forEach(function(_){ $models.append(_) });
+    patches.groupBy('src_category').map(function(_){return '<div class="btn category">'+_+'</div>'}).forEach(function(_){ $categories.append(_) });
+    patches.createButtons();
+
+    $models.click(function(_){ 
+        var $t = $(_.originalEvent.target);
+        $t.hasClass('selected') ? $t.removeClass('selected') : $t.addClass('selected');
+        applyFilter();
+    });
+    
+    $categories.click(function(_){ 
+        var $t = $(_.originalEvent.target);
+        $t.hasClass('selected') ? $t.removeClass('selected') : $t.addClass('selected');
+        applyFilter();
+    });
+    
+    $patches.click(function(_){ console.log(_.originalEvent.target)});
+
+</script>
+</html>
+

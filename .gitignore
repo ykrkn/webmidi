@@ -4,3 +4,4 @@
 include/**/*.js
 midi.js
 .DS_Store
+node_modules
